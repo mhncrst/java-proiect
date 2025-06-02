@@ -1,40 +1,128 @@
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
+        DBManager dbManager = new DBManager();
+        dbManager.createTables();
+
+        Scanner scanner = new Scanner(System.in);
         LibraryService libraryService = new LibraryService();
 
-        Book book1 = new Book(3, "The Hobbit", "J.R.R. Tolkien", 1937);
-        Book book2 = new Book(1, "1984", "George Orwell", 1949);
-        Book book3 = new Book(2, "To Kill a Mockingbird", "Harper Lee", 1960);
+        boolean running = true;
+        while (running) {
+            System.out.println("\n=== Biblioteca - Meniu Principal ===");
+            System.out.println("1. Adaugă carte");
+            System.out.println("2. Adaugă EBook");
+            System.out.println("3. Devino membru");
+            System.out.println("4. Împrumută carte");
+            System.out.println("5. Returnează carte");
+            System.out.println("6. Afișează toate cărțile");
+            System.out.println("7. Șterge carte");
+            System.out.println("8. Ieșire");
+            System.out.print("Alegerea ta: ");
+            int opt = Integer.parseInt(scanner.nextLine());
 
-        libraryService.addBook(book1);
-        libraryService.addBook(book2);
-        libraryService.addBook(book3);
+            switch (opt) {
+                case 1 -> {
+                    System.out.print("ID: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Titlu: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Autor: ");
+                    String author = scanner.nextLine();
+                    System.out.print("An publicare: ");
+                    int year = Integer.parseInt(scanner.nextLine());
 
-        EBook ebook1 = new EBook(4, "Digital Fortress", "Dan Brown", 1998, "PDF");
-        libraryService.addBook(ebook1);
+                    Book book = new Book(id, title, author, year);
+                    BookCRUD.getInstance().insertBook(book);
+                    libraryService.addBook(book);
+                    System.out.println("Carte adăugată.");
+                }
 
-        libraryService.displayAllBooks();
-        System.out.println();
+                case 2 -> {
+                    System.out.print("ID: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Titlu: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Autor: ");
+                    String author = scanner.nextLine();
+                    System.out.print("An publicare: ");
+                    int year = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Format fișier (ex: PDF): ");
+                    String format = scanner.nextLine();
 
-        libraryService.displayAllSortedBooks();
-        System.out.println();
+                    EBook ebook = new EBook(id, title, author, year, format);
+                    libraryService.addBook(ebook);
+                    System.out.println("EBook adăugat.");
+                }
 
-        System.out.println("Imprumutam cartea cu id 1...");
-        libraryService.lendBook(1);
+                case 3 -> {
+                    System.out.print("ID: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Nume: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Adresă: ");
+                    String address = scanner.nextLine();
+                    LocalDate date = LocalDate.now();
 
-        libraryService.displayAllBooks();
-        System.out.println();
+                    Member member = new Member(id, name, address, date);
+                    MemberCRUD.getInstance().insertMember(member);
+                    System.out.println("Membru adăugat.");
+                }
 
-        System.out.println("Returnam cartea cu id 1...");
-        libraryService.returnBook(1);
+                case 4 -> {
+                    System.out.print("ID carte: ");
+                    int bookId = Integer.parseInt(scanner.nextLine());
+                    System.out.print("ID membru: ");
+                    int memberId = Integer.parseInt(scanner.nextLine());
 
-        libraryService.displayAllBooks();
-        System.out.println();
+                    boolean success = libraryService.lendBook(bookId);
+                    if (success) {
+                        System.out.println("Carte împrumutată!");
+                    } else {
+                        System.out.println("Cartea nu este disponibilă.");
+                    }
+                }
 
-        System.out.println("Eliminam cartea cu id 2... ");
-        libraryService.removeBookById(2);
+                case 5 -> {
+                    System.out.print("ID carte de returnat: ");
+                    int bookId = Integer.parseInt(scanner.nextLine());
 
-        libraryService.displayAllBooks();
-        libraryService.displayAllSortedBooks();
+                    boolean success = libraryService.returnBook(bookId);
+                    if (success) {
+                        System.out.println("Carte returnată.");
+                    } else {
+                        System.out.println("Returnare eșuată.");
+                    }
+                }
+
+                case 6 -> {
+                    System.out.println("\n--- Cărți în bibliotecă ---");
+                    libraryService.displayAllBooks();
+                }
+
+                case 7 -> {
+                    System.out.print("ID carte de șters: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    boolean deleted = libraryService.removeBookById(id);
+                    if (deleted) {
+                        System.out.println("Carte ștearsă.");
+                    } else {
+                        System.out.println("ID inexistent.");
+                    }
+                }
+
+                case 8 -> {
+                    System.out.println("La revedere!");
+                    running = false;
+                }
+
+                default -> System.out.println("Opțiune invalidă!");
+            }
+        }
+
+        scanner.close();
     }
 }
