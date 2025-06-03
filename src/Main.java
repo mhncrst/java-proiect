@@ -13,14 +13,14 @@ public class Main {
         boolean running = true;
         while (running) {
             System.out.println("\n=== Biblioteca - Meniu Principal ===");
-            System.out.println("1. Adaugă carte");
-            System.out.println("2. Adaugă EBook");
+            System.out.println("1. Adauga carte");
+            System.out.println("2. Adauga EBook");
             System.out.println("3. Devino membru");
-            System.out.println("4. Împrumută carte");
-            System.out.println("5. Returnează carte");
-            System.out.println("6. Afișează toate cărțile");
-            System.out.println("7. Șterge carte");
-            System.out.println("8. Ieșire");
+            System.out.println("4. Imprumuta carte");
+            System.out.println("5. Returneaza carte");
+            System.out.println("6. Afiseaza toate cartile");
+            System.out.println("7. Sterge carte");
+            System.out.println("8. Iesire");
             System.out.print("Alegerea ta: ");
             int opt = Integer.parseInt(scanner.nextLine());
 
@@ -38,7 +38,7 @@ public class Main {
                     Book book = new Book(id, title, author, year);
                     BookCRUD.getInstance().insertBook(book);
                     libraryService.addBook(book);
-                    System.out.println("Carte adăugată.");
+                    System.out.println("Carte adaugata.");
                 }
 
                 case 2 -> {
@@ -50,12 +50,12 @@ public class Main {
                     String author = scanner.nextLine();
                     System.out.print("An publicare: ");
                     int year = Integer.parseInt(scanner.nextLine());
-                    System.out.print("Format fișier (ex: PDF): ");
+                    System.out.print("Format fisier (ex: PDF): ");
                     String format = scanner.nextLine();
 
                     EBook ebook = new EBook(id, title, author, year, format);
                     libraryService.addBook(ebook);
-                    System.out.println("EBook adăugat.");
+                    System.out.println("EBook adaugat.");
                 }
 
                 case 3 -> {
@@ -63,13 +63,13 @@ public class Main {
                     int id = Integer.parseInt(scanner.nextLine());
                     System.out.print("Nume: ");
                     String name = scanner.nextLine();
-                    System.out.print("Adresă: ");
+                    System.out.print("Adresa: ");
                     String address = scanner.nextLine();
                     LocalDate date = LocalDate.now();
 
                     Member member = new Member(id, name, address, date);
                     MemberCRUD.getInstance().insertMember(member);
-                    System.out.println("Membru adăugat.");
+                    System.out.println("Membru adaugat.");
                 }
 
                 case 4 -> {
@@ -80,9 +80,9 @@ public class Main {
 
                     boolean success = libraryService.lendBook(bookId);
                     if (success) {
-                        System.out.println("Carte împrumutată!");
+                        System.out.println("Carte împrumutata!");
                     } else {
-                        System.out.println("Cartea nu este disponibilă.");
+                        System.out.println("Cartea nu este disponibila.");
                     }
                 }
 
@@ -92,14 +92,14 @@ public class Main {
 
                     boolean success = libraryService.returnBook(bookId);
                     if (success) {
-                        System.out.println("Carte returnată.");
+                        System.out.println("Carte returnata.");
                     } else {
-                        System.out.println("Returnare eșuată.");
+                        System.out.println("Returnare esuata.");
                     }
                 }
 
                 case 6 -> {
-                    System.out.println("\n--- Cărți în bibliotecă ---");
+                    System.out.println("\n--- Carti în biblioteca ---");
                     libraryService.displayAllBooks();
                 }
 
@@ -108,7 +108,7 @@ public class Main {
                     int id = Integer.parseInt(scanner.nextLine());
                     boolean deleted = libraryService.removeBookById(id);
                     if (deleted) {
-                        System.out.println("Carte ștearsă.");
+                        System.out.println("Carte ștearsa.");
                     } else {
                         System.out.println("ID inexistent.");
                     }
@@ -119,7 +119,7 @@ public class Main {
                     running = false;
                 }
 
-                default -> System.out.println("Opțiune invalidă!");
+                default -> System.out.println("Opțiune invalida!");
             }
         }
 
